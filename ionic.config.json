@@ -1,0 +1,7 @@
+{
+  "name": "edpacifApp",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
