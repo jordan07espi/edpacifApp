@@ -7,6 +7,7 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { DbService } from './services/db.service';
 import { SQLite } from '@ionic-native/sqlite/ngx';
+import { MovimientosService } from './services/movimientos.service';
 
 
 @NgModule({
@@ -16,6 +17,7 @@ import { SQLite } from '@ionic-native/sqlite/ngx';
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     DbService,
     SQLite,
+    MovimientosService
   ],
   bootstrap: [AppComponent]
 })

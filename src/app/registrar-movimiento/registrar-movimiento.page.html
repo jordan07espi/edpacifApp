@@ -1,0 +1,45 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/movimientos"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Registrar Movimiento</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-list>
+    <ion-item>
+      <ion-label>Producto</ion-label>
+      <ion-select [(ngModel)]="movimiento.codigoProducto" interface="action-sheet">
+        <ion-select-option *ngFor="let producto of productos" [value]="producto.CODIGO">{{ producto.CODIGO }}</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Tipo Movimiento</ion-label>
+      <ion-select [(ngModel)]="movimiento.tipoMovimiento" interface="action-sheet">
+        <ion-select-option value="Ingreso">Ingreso</ion-select-option>
+        <ion-select-option value="Transferencia">Transferencia</ion-select-option>
+        <ion-select-option value="Salida">Salida</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Cantidad</ion-label>
+      <ion-input type="number" [(ngModel)]="movimiento.cantidad"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Fecha</ion-label>
+      <ion-datetime display-format="MM/DD/YYYY" [(ngModel)]="movimiento.fecha"></ion-datetime>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Sucursal</ion-label>
+      <ion-input type="text" [(ngModel)]="movimiento.sucursal"></ion-input>
+    </ion-item>
+  </ion-list>
+
+  <ion-button expand="full" (click)="registrarMovimiento()">Registrar Movimiento</ion-button>
+</ion-content>

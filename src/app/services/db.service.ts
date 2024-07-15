@@ -17,7 +17,7 @@ export class DbService {
       location: 'default'
     }).then((db: SQLiteObject) => {
       this.dbInstance = db;
-      db.executeSql('CREATE TABLE IF NOT EXISTS PRODUCTOS(CODIGO VARCHAR(10) PRIMARY KEY, DESCRIPCION VARCHAR(100), TALLA VARCHAR(10), CONTINENTE VARCHAR(20), PAIS VARCHAR(50), STOCK_LBS INTEGER, PRECIO_COMPRA REAL, PRECIO_VENTA REAL)', [])
+      db.executeSql('CREATE TABLE IF NOT EXISTS PRODUCTOS(CODIGO VARCHAR(10) PRIMARY KEY, DESCRIPCION VARCHAR(100), TALLA VARCHAR(10), CONTINENTE VARCHAR(20), PAIS VARCHAR(50), PRECIO_COMPRA REAL, PRECIO_VENTA REAL)', [])
         .then(() => {
           console.log('Tabla PRODUCTOS creada correctamente');
         })
@@ -30,14 +30,14 @@ export class DbService {
     });
   }
 
-  almacenarProducto(codigo: string, descripcion: string, talla: string, continente: string, pais: string, stockLbs: number, precioCompra: number, precioVenta: number): Promise<void> {
+  almacenarProducto(codigo: string, descripcion: string, talla: string, continente: string, pais: string, precioCompra: number, precioVenta: number): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       if (!this.dbInstance) {
         console.error('Base de datos no inicializada');
         reject('Base de datos no inicializada');
         return;
       }
-      this.dbInstance.executeSql('REPLACE INTO PRODUCTOS (CODIGO, DESCRIPCION, TALLA, CONTINENTE, PAIS, STOCK_LBS, PRECIO_COMPRA, PRECIO_VENTA) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [codigo, descripcion, talla, continente, pais, stockLbs, precioCompra, precioVenta])
+      this.dbInstance.executeSql('REPLACE INTO PRODUCTOS (CODIGO, DESCRIPCION, TALLA, CONTINENTE, PAIS, PRECIO_COMPRA, PRECIO_VENTA) VALUES (?, ?, ?, ?, ?, ?, ?)', [codigo, descripcion, talla, continente, pais, precioCompra, precioVenta])
         .then(() => {
           console.log('Producto almacenado correctamente');
           resolve();

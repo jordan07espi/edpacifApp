@@ -39,7 +39,6 @@ export class ProductosPage implements OnInit {
         { name: 'talla', type: 'text', placeholder: 'Talla' },
         { name: 'continente', type: 'text', placeholder: 'Continente' },
         { name: 'pais', type: 'text', placeholder: 'País' },
-        { name: 'stockLbs', type: 'number', placeholder: 'Stock Libras' },
         { name: 'precioCompra', type: 'number', placeholder: 'Precio Compra' },
         { name: 'precioVenta', type: 'number', placeholder: 'Precio Venta' }
       ],
@@ -55,7 +54,7 @@ export class ProductosPage implements OnInit {
         {
           text: 'Almacenar',
           handler: (data) => {
-            this.almacenarProducto(data.codigo, data.descripcion, data.talla, data.continente, data.pais, data.stockLbs, data.precioCompra, data.precioVenta);
+            this.almacenarProducto(data.codigo, data.descripcion, data.talla, data.continente, data.pais, data.precioCompra, data.precioVenta);
           }
         }
       ]
@@ -63,8 +62,8 @@ export class ProductosPage implements OnInit {
     await alert.present();
   }
 
-  almacenarProducto(codigo: string, descripcion: string, talla: string, continente: string, pais: string, stockLbs: number, precioCompra: number, precioVenta: number) {
-    this.dbService.almacenarProducto(codigo, descripcion, talla, continente, pais, stockLbs, precioCompra, precioVenta).then(() => {
+  almacenarProducto(codigo: string, descripcion: string, talla: string, continente: string, pais: string, precioCompra: number, precioVenta: number) {
+    this.dbService.almacenarProducto(codigo, descripcion, talla, continente, pais, precioCompra, precioVenta).then(() => {
       this.loadProductos();
       this.presentToast('Producto agregado exitosamente');
     }).catch(() => {
@@ -95,8 +94,8 @@ export class ProductosPage implements OnInit {
 
   eliminarProducto(codigo: string) {
     this.dbService.eliminarProducto(codigo).then(() => {
+      this.loadProductos();
       this.presentToast('Producto eliminado exitosamente');
-      this.loadProductos(); // Llamar a loadProductos para actualizar la lista
     }).catch(() => {
       this.presentToast('Error al eliminar producto');
     });
