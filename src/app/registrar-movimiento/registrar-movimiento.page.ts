@@ -16,8 +16,11 @@ export class RegistrarMovimientoPage implements OnInit {
     tipoMovimiento: '',
     cantidad: 0,
     fecha: '',
-    sucursal: ''
+    sucursal: '',
+    productoDestino: '' // nuevo campo para el producto destino en caso de transferencia
   };
+
+  mostrarProductoDestino: boolean = false;
 
   constructor(
     private movimientosService: MovimientosService,
@@ -38,9 +41,13 @@ export class RegistrarMovimientoPage implements OnInit {
     });
   }
 
+  onTipoMovimientoChange(event: any) {
+    this.mostrarProductoDestino = event.detail.value === 'Transferencia';
+  }
+
   registrarMovimiento() {
-    const { codigoProducto, tipoMovimiento, cantidad, fecha, sucursal } = this.movimiento;
-    this.movimientosService.registrarMovimiento(codigoProducto, tipoMovimiento, cantidad, fecha, sucursal).then(() => {
+    const { codigoProducto, tipoMovimiento, cantidad, fecha, sucursal, productoDestino } = this.movimiento;
+    this.movimientosService.registrarMovimiento(codigoProducto, tipoMovimiento, cantidad, fecha, sucursal, productoDestino).then(() => {
       this.presentToast('Movimiento registrado exitosamente');
       this.router.navigate(['/movimientos']);
     }).catch(() => {

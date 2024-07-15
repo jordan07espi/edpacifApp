@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { MovimientosService } from '../services/movimientos.service';
 import { Router } from '@angular/router';
+import { ToastController } from '@ionic/angular';
+import { MovimientosService } from '../services/movimientos.service';
 
 @Component({
   selector: 'app-movimientos',
@@ -12,10 +13,15 @@ export class MovimientosPage implements OnInit {
 
   constructor(
     private movimientosService: MovimientosService,
+    private toastController: ToastController,
     private router: Router
   ) {}
 
   ngOnInit() {
+    this.loadMovimientos();
+  }
+
+  ionViewWillEnter() {
     this.loadMovimientos();
   }
 
@@ -27,7 +33,28 @@ export class MovimientosPage implements OnInit {
     });
   }
 
-  irARegistrarMovimiento() {
+  registrarMovimiento() {
     this.router.navigate(['/registrar-movimiento']);
+  }
+
+  getColorClass(tipoMovimiento: string): string {
+    switch (tipoMovimiento) {
+      case 'Ingreso':
+        return 'ingreso';
+      case 'Salida':
+        return 'salida';
+      case 'Transferencia':
+        return 'transferencia';
+      default:
+        return '';
+    }
+  }
+
+  async presentToast(message: string) {
+    const toast = await this.toastController.create({
+      message,
+      duration: 2000
+    });
+    toast.present();
   }
 }

@@ -22,6 +22,7 @@
 
   <ion-list inset="true">
     <ion-item *ngFor="let producto of productos" (click)="verDetallesProducto(producto.CODIGO)" (ionPress)="confirmarEliminarProducto(producto.CODIGO)">
+      <ion-icon aria-hidden="true" name="cube" slot="start"></ion-icon>
       <ion-label>
         <h2>{{ producto.CODIGO }}</h2>
         <p>{{ producto.TALLA }}</p>

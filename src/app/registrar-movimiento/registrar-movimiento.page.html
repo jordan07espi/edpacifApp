@@ -18,10 +18,17 @@
 
     <ion-item>
       <ion-label>Tipo Movimiento</ion-label>
-      <ion-select [(ngModel)]="movimiento.tipoMovimiento" interface="action-sheet">
+      <ion-select [(ngModel)]="movimiento.tipoMovimiento" (ionChange)="onTipoMovimientoChange($event)" interface="action-sheet">
         <ion-select-option value="Ingreso">Ingreso</ion-select-option>
         <ion-select-option value="Transferencia">Transferencia</ion-select-option>
         <ion-select-option value="Salida">Salida</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item *ngIf="mostrarProductoDestino">
+      <ion-label>Producto Destino</ion-label>
+      <ion-select [(ngModel)]="movimiento.productoDestino" interface="action-sheet">
+        <ion-select-option *ngFor="let producto of productos" [value]="producto.CODIGO">{{ producto.CODIGO }}</ion-select-option>
       </ion-select>
     </ion-item>
 

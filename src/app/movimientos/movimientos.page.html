@@ -1,13 +1,12 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-menu-button color="primary">
-      </ion-menu-button>
+      <ion-menu-button color="primary"></ion-menu-button>
     </ion-buttons>
     <ion-title>Movimientos</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="irARegistrarMovimiento()">
-        <ion-icon slot="icon-only" name="add" color="primary" ></ion-icon>
+      <ion-button (click)="registrarMovimiento()">
+        <ion-icon slot="icon-only" name="add" color="primary"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -15,11 +14,14 @@
 
 <ion-content [fullscreen]="true" color="light">
   <ion-list inset="true">
-    <ion-item *ngFor="let movimiento of movimientos">
+    <ion-item *ngFor="let movimiento of movimientos" [ngClass]="getColorClass(movimiento.TIPO_MOVIMIENTO)">
       <ion-label>
         <h2>{{ movimiento.CODIGO_PRODUCTO }}</h2>
-        <p>{{ movimiento.TIPO_MOVIMIENTO }} - {{ movimiento.CANTIDAD }} lbs</p>
-        <p>{{ movimiento.FECHA }} - {{ movimiento.SUCURSAL }}</p>
+        <p>Tipo: {{ movimiento.TIPO_MOVIMIENTO }}</p>
+        <p>Cantidad: {{ movimiento.CANTIDAD }} lbs</p>
+        <p>Fecha: {{ movimiento.FECHA }}</p>
+        <p>Sucursal: {{ movimiento.SUCURSAL }}</p>
+        <p *ngIf="movimiento.PRODUCTO_DESTINO">Producto Destino: {{ movimiento.PRODUCTO_DESTINO }}</p>
       </ion-label>
     </ion-item>
   </ion-list>

@@ -17,7 +17,7 @@ export class MovimientosService {
       location: 'default'
     }).then((db: SQLiteObject) => {
       this.dbInstance = db;
-      db.executeSql('CREATE TABLE IF NOT EXISTS MOVIMIENTOS(CODIGO_PRODUCTO VARCHAR(10), TIPO_MOVIMIENTO VARCHAR(20), CANTIDAD INTEGER, FECHA TEXT, SUCURSAL VARCHAR(50))', [])
+      db.executeSql('CREATE TABLE IF NOT EXISTS MOVIMIENTOS(CODIGO_PRODUCTO VARCHAR(10), TIPO_MOVIMIENTO VARCHAR(20), CANTIDAD INTEGER, FECHA TEXT, SUCURSAL VARCHAR(50), PRODUCTO_DESTINO VARCHAR(10))', [])
         .then(() => {
           console.log('Tabla MOVIMIENTOS creada correctamente');
         })
@@ -30,22 +30,43 @@ export class MovimientosService {
     });
   }
 
-  registrarMovimiento(codigoProducto: string, tipoMovimiento: string, cantidad: number, fecha: string, sucursal: string): Promise<void> {
+  registrarMovimiento(codigoProducto: string, tipoMovimiento: string, cantidad: number, fecha: string, sucursal: string, productoDestino: string = ''): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       if (!this.dbInstance) {
         console.error('Base de datos no inicializada');
         reject('Base de datos no inicializada');
         return;
       }
-      this.dbInstance.executeSql('INSERT INTO MOVIMIENTOS (CODIGO_PRODUCTO, TIPO_MOVIMIENTO, CANTIDAD, FECHA, SUCURSAL) VALUES (?, ?, ?, ?, ?)', [codigoProducto, tipoMovimiento, cantidad, fecha, sucursal])
-        .then(() => {
-          console.log('Movimiento registrado correctamente');
-          resolve();
-        })
-        .catch(e => {
-          console.log('Error registrando movimiento', e);
-          reject(e);
-        });
+
+      const executeSql = (sql: string, params: any[]): Promise<void> => {
+        return this.dbInstance!.executeSql(sql, params).then(() => {}).catch(e => { throw e; });
+      };
+
+      if (tipoMovimiento === 'Transferencia') {
+        executeSql('INSERT INTO MOVIMIENTOS (CODIGO_PRODUCTO, TIPO_MOVIMIENTO, CANTIDAD, FECHA, SUCURSAL, PRODUCTO_DESTINO) VALUES (?, ?, ?, ?, ?, ?)', [codigoProducto, tipoMovimiento, cantidad, fecha, sucursal, productoDestino])
+          .then(() => {
+            // Registrar el movimiento de ingreso para el producto destino
+            return executeSql('INSERT INTO MOVIMIENTOS (CODIGO_PRODUCTO, TIPO_MOVIMIENTO, CANTIDAD, FECHA, SUCURSAL) VALUES (?, ?, ?, ?, ?)', [productoDestino, 'Ingreso', cantidad, fecha, sucursal]);
+          })
+          .then(() => {
+            console.log('Movimientos de transferencia registrados correctamente');
+            resolve();
+          })
+          .catch(e => {
+            console.log('Error registrando movimientos de transferencia', e);
+            reject(e);
+          });
+      } else {
+        executeSql('INSERT INTO MOVIMIENTOS (CODIGO_PRODUCTO, TIPO_MOVIMIENTO, CANTIDAD, FECHA, SUCURSAL, PRODUCTO_DESTINO) VALUES (?, ?, ?, ?, ?, ?)', [codigoProducto, tipoMovimiento, cantidad, fecha, sucursal, productoDestino])
+          .then(() => {
+            console.log('Movimiento registrado correctamente');
+            resolve();
+          })
+          .catch(e => {
+            console.log('Error registrando movimiento', e);
+            reject(e);
+          });
+      }
     });
   }
 
