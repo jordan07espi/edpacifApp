@@ -7,8 +7,8 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-list>
+<ion-content [fullscreen]="true" color="light">
+  <ion-list inset="true">
     <ion-item>
       <ion-label>Producto</ion-label>
       <ion-select [(ngModel)]="movimiento.codigoProducto" interface="action-sheet">
@@ -36,10 +36,13 @@
     </ion-item>
 
     <ion-item>
-      <ion-label position="floating">Sucursal</ion-label>
-      <ion-input type="text" [(ngModel)]="movimiento.sucursal"></ion-input>
+      <ion-label>Sucursal</ion-label>
+      <ion-select [(ngModel)]="movimiento.sucursal" interface="action-sheet">
+        <ion-select-option value="Guayaquil">Guayaquil</ion-select-option>
+        <ion-select-option value="Machala">Machala</ion-select-option>
+      </ion-select>
     </ion-item>
   </ion-list>
 
-  <ion-button expand="full" (click)="registrarMovimiento()">Registrar Movimiento</ion-button>
+  <ion-button expand="block" (click)="registrarMovimiento()">Registrar Movimiento</ion-button>
 </ion-content>
