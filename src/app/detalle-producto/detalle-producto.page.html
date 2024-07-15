@@ -1,0 +1,37 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/productos"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Detalle del Producto</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-card *ngIf="producto">
+    <ion-card-header>
+      <ion-card-title>{{ producto.CODIGO }}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p><strong>Descripción:</strong> {{ producto.DESCRIPCION }}</p>
+      <p><strong>Talla:</strong> {{ producto.TALLA }}</p>
+      <p><strong>Continente:</strong> {{ producto.CONTINENTE }}</p>
+      <p><strong>País:</strong> {{ producto.PAIS }}</p>
+      <p><strong>Stock Libras:</strong> {{ producto.STOCK_LBS }}</p>
+      <p><strong>Precio Compra:</strong> {{ producto.PRECIO_COMPRA}}</p>
+      <p><strong>Precio Venta:</strong> {{ producto.PRECIO_VENTA }}</p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-fab vertical="bottom" horizontal="start" slot="fixed">
+    <ion-fab-button color="primary" (click)="editarProducto()">
+      <ion-icon name="create"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button color="danger" (click)="confirmarEliminarProducto()">
+      <ion-icon name="trash"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

@@ -4,13 +4,30 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'folder/Inbox',
+    redirectTo: 'productos',
     pathMatch: 'full'
   },
   {
-    path: 'folder/:id',
-    loadChildren: () => import('./folder/folder.module').then( m => m.FolderPageModule)
-  }
+    path: 'productos',
+    loadChildren: () => import('./productos/productos.module').then(m => m.ProductosPageModule)
+  },
+  {
+    path: 'detalle-producto/:codigo',
+    loadChildren: () => import('./detalle-producto/detalle-producto.module').then(m => m.DetalleProductoPageModule)
+  },
+  {
+    path: 'movimientos',
+    loadChildren: () => import('./movimientos/movimientos.module').then(m => m.MovimientosPageModule)
+  },
+  {
+    path: 'kardex',
+    loadChildren: () => import('./kardex/kardex.module').then( m => m.KardexPageModule)
+  },
+  {
+    path: 'reportes',
+    loadChildren: () => import('./reportes/reportes.module').then(m => m.ReportesPageModule)
+  },
+
 ];
 
 @NgModule({

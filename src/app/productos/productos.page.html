@@ -1,0 +1,35 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button color="primary"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Productos</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Productos</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button color="primary" (click)="mostrarFormulario()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <ion-list>
+    <ion-item *ngFor="let producto of productos" (click)="verDetallesProducto(producto.CODIGO)" (ionPress)="confirmarEliminarProducto(producto.CODIGO)">
+      <ion-label>
+        <h2>{{ producto.CODIGO }}</h2>
+        <p>{{ producto.TALLA }}</p>
+      </ion-label>
+      <ion-note slot="end">
+        <h5 class="stock-quantity">{{ producto.STOCK_LBS }} lbs</h5>
+        <p><strong>Stock:</strong></p>
+      </ion-note>
+    </ion-item>
+  </ion-list>
+</ion-content>

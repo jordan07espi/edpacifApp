@@ -1,18 +1,34 @@
 import { Component } from '@angular/core';
+import { Platform } from '@ionic/angular';
+import {Device} from '@capacitor/device';
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
+
+  public isweb:boolean;
+  public load: boolean;
+
   public appPages = [
-    { title: 'Inbox', url: '/folder/inbox', icon: 'mail' },
-    { title: 'Outbox', url: '/folder/outbox', icon: 'paper-plane' },
-    { title: 'Favorites', url: '/folder/favorites', icon: 'heart' },
-    { title: 'Archived', url: '/folder/archived', icon: 'archive' },
-    { title: 'Trash', url: '/folder/trash', icon: 'trash' },
-    { title: 'Spam', url: '/folder/spam', icon: 'warning' },
+    { title: 'Productos', url: '/productos', icon: 'cube' },
+    { title: 'Movimientos', url: '/movimientos', icon: 'bus' },
+    { title: 'Kardex', url: '/kardex', icon: 'stats-chart' },
+    { title: 'Reportes', url: '/reportes', icon: 'document-text' },
   ];
-  public labels = ['Family', 'Friends', 'Notes', 'Work', 'Travel', 'Reminders'];
-  constructor() {}
+
+  constructor(private plataform: Platform) {
+    this.isweb = false;
+    this.load = false;
+    this.initAPP();
+  }
+  initAPP(){
+    this.plataform.ready().then( async()=>{
+      const info = await Device.getInfo();
+      this.isweb = info.platform == 'web';
+      this.load = true;
+    })
+  }
 }
