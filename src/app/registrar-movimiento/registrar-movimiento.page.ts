@@ -16,7 +16,6 @@ export class RegistrarMovimientoPage implements OnInit {
     tipoMovimiento: '',
     cantidad: 0,
     fecha: '',
-    sucursal: '',
     productoDestino: '' // nuevo campo para el producto destino en caso de transferencia
   };
 
@@ -46,8 +45,8 @@ export class RegistrarMovimientoPage implements OnInit {
   }
 
   registrarMovimiento() {
-    const { codigoProducto, tipoMovimiento, cantidad, fecha, sucursal, productoDestino } = this.movimiento;
-    this.movimientosService.registrarMovimiento(codigoProducto, tipoMovimiento, cantidad, fecha, sucursal, productoDestino).then(() => {
+    const { codigoProducto, tipoMovimiento, cantidad, fecha, productoDestino } = this.movimiento;
+    this.movimientosService.registrarMovimiento(codigoProducto, tipoMovimiento, cantidad, fecha, productoDestino).then(() => {
       this.presentToast('Movimiento registrado exitosamente');
       this.router.navigate(['/movimientos']);
     }).catch(() => {
