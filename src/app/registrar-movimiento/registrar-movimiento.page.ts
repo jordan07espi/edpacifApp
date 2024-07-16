@@ -49,7 +49,8 @@ export class RegistrarMovimientoPage implements OnInit {
     this.movimientosService.registrarMovimiento(codigoProducto, tipoMovimiento, cantidad, fecha, productoDestino).then(() => {
       this.presentToast('Movimiento registrado exitosamente');
       this.router.navigate(['/movimientos']);
-    }).catch(() => {
+    }).catch((error) => {
+      console.error('Error al registrar movimiento:', error);
       this.presentToast('Error al registrar movimiento');
     });
   }

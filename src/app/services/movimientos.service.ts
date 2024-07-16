@@ -30,44 +30,39 @@ export class MovimientosService {
     });
   }
 
-  registrarMovimiento(codigoProducto: string, tipoMovimiento: string, cantidad: number, fecha: string, productoDestino: string = ''): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      if (!this.dbInstance) {
-        console.error('Base de datos no inicializada');
-        reject('Base de datos no inicializada');
-        return;
+  async registrarMovimiento(codigoProducto: string, tipoMovimiento: string, cantidad: number, fecha: string, productoDestino: string = ''): Promise<void> {
+    if (!this.dbInstance) {
+      console.error('Base de datos no inicializada');
+      throw new Error('Base de datos no inicializada');
+    }
+    try {
+      await this.dbInstance.executeSql('INSERT INTO MOVIMIENTOS (CODIGO_PRODUCTO, TIPO_MOVIMIENTO, CANTIDAD, FECHA, PRODUCTO_DESTINO) VALUES (?, ?, ?, ?, ?)', [codigoProducto, tipoMovimiento, cantidad, fecha, productoDestino]);
+
+      let stockUpdateQuery = '';
+      let stockUpdateParams: any[] = [];
+
+      if (tipoMovimiento === 'Ingreso') {
+        stockUpdateQuery = 'UPDATE PRODUCTOS SET STOCK_LBS = COALESCE(STOCK_LBS, 0) + ? WHERE CODIGO = ?';
+        stockUpdateParams = [cantidad, codigoProducto];
+      } else if (tipoMovimiento === 'Salida' || tipoMovimiento === 'Transferencia') {
+        stockUpdateQuery = 'UPDATE PRODUCTOS SET STOCK_LBS = COALESCE(STOCK_LBS, 0) - ? WHERE CODIGO = ?';
+        stockUpdateParams = [cantidad, codigoProducto];
       }
 
-      const executeSql = (sql: string, params: any[]): Promise<void> => {
-        return this.dbInstance!.executeSql(sql, params).then(() => {}).catch(e => { throw e; });
-      };
+      await this.dbInstance.executeSql(stockUpdateQuery, stockUpdateParams);
 
       if (tipoMovimiento === 'Transferencia') {
-        executeSql('INSERT INTO MOVIMIENTOS (CODIGO_PRODUCTO, TIPO_MOVIMIENTO, CANTIDAD, FECHA, PRODUCTO_DESTINO) VALUES (?, ?, ?, ?, ?)', [codigoProducto, tipoMovimiento, cantidad, fecha, productoDestino])
-          .then(() => {
-            // Registrar el movimiento de ingreso para el producto destino
-            return executeSql('INSERT INTO MOVIMIENTOS (CODIGO_PRODUCTO, TIPO_MOVIMIENTO, CANTIDAD, FECHA) VALUES (?, ?, ?, ?)', [productoDestino, 'Ingreso', cantidad, fecha]);
-          })
-          .then(() => {
-            console.log('Movimientos de transferencia registrados correctamente');
-            resolve();
-          })
-          .catch(e => {
-            console.log('Error registrando movimientos de transferencia', e);
-            reject(e);
-          });
-      } else {
-        executeSql('INSERT INTO MOVIMIENTOS (CODIGO_PRODUCTO, TIPO_MOVIMIENTO, CANTIDAD, FECHA) VALUES (?, ?, ?, ?)', [codigoProducto, tipoMovimiento, cantidad, fecha])
-          .then(() => {
-            console.log('Movimiento registrado correctamente');
-            resolve();
-          })
-          .catch(e => {
-            console.log('Error registrando movimiento', e);
-            reject(e);
-          });
+        // Registrar el movimiento de ingreso para el producto destino
+        await this.dbInstance.executeSql('INSERT INTO MOVIMIENTOS (CODIGO_PRODUCTO, TIPO_MOVIMIENTO, CANTIDAD, FECHA, PRODUCTO_DESTINO) VALUES (?, ?, ?, ?, ?)', [productoDestino, 'Ingreso', cantidad, fecha, '']);
+        // Actualizar el stock del producto destino
+        await this.dbInstance.executeSql('UPDATE PRODUCTOS SET STOCK_LBS = COALESCE(STOCK_LBS, 0) + ? WHERE CODIGO = ?', [cantidad, productoDestino]);
       }
-    });
+
+      console.log('Movimiento registrado correctamente');
+    } catch (e) {
+      console.log('Error registrando movimiento', e);
+      throw e;
+    }
   }
 
   obtenerMovimientos(): Promise<any[]> {
