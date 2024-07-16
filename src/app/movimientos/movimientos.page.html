@@ -13,8 +13,31 @@
 </ion-header>
 
 <ion-content [fullscreen]="true" color="light">
-  <ion-list inset="true">
-    <ion-item *ngFor="let movimiento of movimientos" [ngClass]="getColorClass(movimiento.TIPO_MOVIMIENTO)">
+  <ion-segment value="ingresos" (ionChange)="segmentChanged($event)">
+    <ion-segment-button value="ingresos">
+      <ion-label>Ingresos</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="salidas">
+      <ion-label>Salidas</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <ion-list inset="true" *ngIf="segmentValue === 'ingresos'">
+    <ion-item *ngFor="let movimiento of ingresos" [ngClass]="getColorClass(movimiento.TIPO_MOVIMIENTO)">
+      <ion-icon aria-hidden="true" name="git-compare" slot="start"></ion-icon>
+      <ion-label>
+        <h2>{{ movimiento.CODIGO_PRODUCTO }}</h2>
+        <p>Tipo: {{ movimiento.TIPO_MOVIMIENTO }}</p>
+        <p>Cantidad: {{ movimiento.CANTIDAD }} lbs</p>
+        <p>Fecha: {{ movimiento.FECHA }}</p>
+        <p>Sucursal: {{ movimiento.SUCURSAL }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ion-list inset="true" *ngIf="segmentValue === 'salidas'">
+    <ion-item *ngFor="let movimiento of salidas" [ngClass]="getColorClass(movimiento.TIPO_MOVIMIENTO)">
+      <ion-icon aria-hidden="true" name="git-compare" slot="start"></ion-icon>
       <ion-label>
         <h2>{{ movimiento.CODIGO_PRODUCTO }}</h2>
         <p>Tipo: {{ movimiento.TIPO_MOVIMIENTO }}</p>

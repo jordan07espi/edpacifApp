@@ -11,14 +11,14 @@
   <ion-list inset="true">
     <ion-item>
       <ion-label>Producto</ion-label>
-      <ion-select [(ngModel)]="movimiento.codigoProducto" interface="action-sheet">
+      <ion-select [(ngModel)]="movimiento.codigoProducto" interface="action-sheet" slot="end">
         <ion-select-option *ngFor="let producto of productos" [value]="producto.CODIGO">{{ producto.CODIGO }}</ion-select-option>
       </ion-select>
     </ion-item>
 
     <ion-item>
       <ion-label>Tipo Movimiento</ion-label>
-      <ion-select [(ngModel)]="movimiento.tipoMovimiento" (ionChange)="onTipoMovimientoChange($event)" interface="action-sheet">
+      <ion-select [(ngModel)]="movimiento.tipoMovimiento" (ionChange)="onTipoMovimientoChange($event)" interface="action-sheet" slot="end">
         <ion-select-option value="Ingreso">Ingreso</ion-select-option>
         <ion-select-option value="Transferencia">Transferencia</ion-select-option>
         <ion-select-option value="Salida">Salida</ion-select-option>
@@ -44,7 +44,7 @@
 
     <ion-item>
       <ion-label>Sucursal</ion-label>
-      <ion-select [(ngModel)]="movimiento.sucursal" interface="action-sheet">
+      <ion-select [(ngModel)]="movimiento.sucursal" interface="action-sheet" slot="end">
         <ion-select-option value="Guayaquil">Guayaquil</ion-select-option>
         <ion-select-option value="Machala">Machala</ion-select-option>
       </ion-select>

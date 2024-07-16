@@ -10,6 +10,9 @@ import { MovimientosService } from '../services/movimientos.service';
 })
 export class MovimientosPage implements OnInit {
   movimientos: any[] = [];
+  ingresos: any[] = [];
+  salidas: any[] = [];
+  segmentValue: string = 'ingresos';
 
   constructor(
     private movimientosService: MovimientosService,
@@ -28,9 +31,15 @@ export class MovimientosPage implements OnInit {
   loadMovimientos() {
     this.movimientosService.obtenerMovimientos().then((data) => {
       this.movimientos = data;
+      this.ingresos = this.movimientos.filter(mov => mov.TIPO_MOVIMIENTO === 'Ingreso');
+      this.salidas = this.movimientos.filter(mov => mov.TIPO_MOVIMIENTO === 'Salida' || mov.TIPO_MOVIMIENTO === 'Transferencia');
     }).catch((e) => {
       console.error('Error al cargar movimientos', e);
     });
+  }
+
+  segmentChanged(event: any) {
+    this.segmentValue = event.detail.value;
   }
 
   registrarMovimiento() {

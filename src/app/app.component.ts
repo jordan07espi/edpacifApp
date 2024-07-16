@@ -14,7 +14,7 @@ export class AppComponent {
 
   public appPages = [
     { title: 'Productos', url: '/productos', icon: 'cube' },
-    { title: 'Movimientos', url: '/movimientos', icon: 'bus' },
+    { title: 'Movimientos', url: '/movimientos', icon: 'git-compare' },
     { title: 'Kardex', url: '/kardex', icon: 'stats-chart' },
     { title: 'Reportes', url: '/reportes', icon: 'document-text' },
   ];
