@@ -9,18 +9,18 @@
 
 <ion-content [fullscreen]="true" color="light">
   <ion-list inset="true">
-    <ion-item >
+    <ion-item>
       <ion-label position="floating">Código de Producto</ion-label>
       <ion-input [(ngModel)]="codigoProducto" (ionBlur)="consultarKardex()"></ion-input>
     </ion-item>
-</ion-list>
+  </ion-list>
 
   <ion-card *ngIf="saldoActual !== null">
     <ion-card-header>
       <ion-card-title>{{ saldoActual }} lbs</ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      <P>Saldo Actual</P>
+      <p>Saldo Actual</p>
     </ion-card-content>
   </ion-card>
 
@@ -31,7 +31,11 @@
         <p>{{ movimiento.CANTIDAD }} lbs</p>
         <p>{{ movimiento.FECHA }}</p>
         <p *ngIf="movimiento.PRODUCTO_DESTINO">Destino: {{ movimiento.PRODUCTO_DESTINO }}</p>
+        <p *ngIf="movimiento.PRODUCTO_ORIGEN">Origen: {{ movimiento.PRODUCTO_ORIGEN }}</p>
       </ion-label>
+      <ion-note slot="end" [color]="movimiento.TIPO_MOVIMIENTO === 'Ingreso' ? 'success' : 'danger'">
+        {{ movimiento.TIPO_MOVIMIENTO === 'Ingreso' ? '+' : '-' }}{{ movimiento.CANTIDAD }} lbs
+      </ion-note>
     </ion-item>
   </ion-list>
 </ion-content>

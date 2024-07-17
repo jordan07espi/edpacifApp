@@ -34,9 +34,9 @@ export class KardexPage {
   calcularSaldoActual() {
     let saldo = 0;
     this.movimientos.forEach((mov) => {
-      if (mov.TIPO_MOVIMIENTO === 'Ingreso') {
+      if (mov.TIPO_MOVIMIENTO === 'Ingreso' || (mov.TIPO_MOVIMIENTO === 'Transferencia' && mov.PRODUCTO_DESTINO === this.codigoProducto)) {
         saldo += mov.CANTIDAD;
-      } else if (mov.TIPO_MOVIMIENTO === 'Salida') {
+      } else if (mov.TIPO_MOVIMIENTO === 'Salida' || (mov.TIPO_MOVIMIENTO === 'Transferencia' && mov.CODIGO_PRODUCTO === this.codigoProducto)) {
         saldo -= mov.CANTIDAD;
       }
     });

@@ -17,7 +17,7 @@ export class MovimientosService {
       location: 'default'
     }).then((db: SQLiteObject) => {
       this.dbInstance = db;
-      db.executeSql('CREATE TABLE IF NOT EXISTS MOVIMIENTOS(CODIGO_PRODUCTO VARCHAR(10), TIPO_MOVIMIENTO VARCHAR(20), CANTIDAD INTEGER, FECHA TEXT, PRODUCTO_DESTINO VARCHAR(10))', [])
+      db.executeSql('CREATE TABLE IF NOT EXISTS MOVIMIENTOS(CODIGO_PRODUCTO VARCHAR(10), TIPO_MOVIMIENTO VARCHAR(20), CANTIDAD INTEGER, FECHA TEXT, PRODUCTO_DESTINO VARCHAR(10), PRODUCTO_ORIGEN VARCHAR(10))', [])
         .then(() => {
           console.log('Tabla MOVIMIENTOS creada correctamente');
         })
@@ -30,13 +30,13 @@ export class MovimientosService {
     });
   }
 
-  async registrarMovimiento(codigoProducto: string, tipoMovimiento: string, cantidad: number, fecha: string, productoDestino: string = ''): Promise<void> {
+  async registrarMovimiento(codigoProducto: string, tipoMovimiento: string, cantidad: number, fecha: string, productoDestino: string = '', productoOrigen: string = ''): Promise<void> {
     if (!this.dbInstance) {
       console.error('Base de datos no inicializada');
       throw new Error('Base de datos no inicializada');
     }
     try {
-      await this.dbInstance.executeSql('INSERT INTO MOVIMIENTOS (CODIGO_PRODUCTO, TIPO_MOVIMIENTO, CANTIDAD, FECHA, PRODUCTO_DESTINO) VALUES (?, ?, ?, ?, ?)', [codigoProducto, tipoMovimiento, cantidad, fecha, productoDestino]);
+      await this.dbInstance.executeSql('INSERT INTO MOVIMIENTOS (CODIGO_PRODUCTO, TIPO_MOVIMIENTO, CANTIDAD, FECHA, PRODUCTO_DESTINO, PRODUCTO_ORIGEN) VALUES (?, ?, ?, ?, ?, ?)', [codigoProducto, tipoMovimiento, cantidad, fecha, productoDestino, productoOrigen]);
 
       let stockUpdateQuery = '';
       let stockUpdateParams: any[] = [];
@@ -52,7 +52,9 @@ export class MovimientosService {
       await this.dbInstance.executeSql(stockUpdateQuery, stockUpdateParams);
 
       if (tipoMovimiento === 'Transferencia') {
-        await this.dbInstance.executeSql('INSERT INTO MOVIMIENTOS (CODIGO_PRODUCTO, TIPO_MOVIMIENTO, CANTIDAD, FECHA, PRODUCTO_DESTINO) VALUES (?, ?, ?, ?, ?)', [productoDestino, 'Ingreso', cantidad, fecha, '']);
+        // Registrar el movimiento de ingreso para el producto destino
+        await this.dbInstance.executeSql('INSERT INTO MOVIMIENTOS (CODIGO_PRODUCTO, TIPO_MOVIMIENTO, CANTIDAD, FECHA, PRODUCTO_DESTINO, PRODUCTO_ORIGEN) VALUES (?, ?, ?, ?, ?, ?)', [productoDestino, 'Ingreso', cantidad, fecha, '', codigoProducto]);
+        // Actualizar el stock del producto destino
         await this.dbInstance.executeSql('UPDATE PRODUCTOS SET STOCK_LBS = COALESCE(STOCK_LBS, 0) + ? WHERE CODIGO = ?', [cantidad, productoDestino]);
       }
 
