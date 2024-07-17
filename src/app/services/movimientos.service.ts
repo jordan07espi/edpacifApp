@@ -17,7 +17,7 @@ export class MovimientosService {
       location: 'default'
     }).then((db: SQLiteObject) => {
       this.dbInstance = db;
-      db.executeSql('CREATE TABLE IF NOT EXISTS MOVIMIENTOS(CODIGO_PRODUCTO VARCHAR(10), TIPO_MOVIMIENTO VARCHAR(20), CANTIDAD INTEGER, FECHA TEXT, PRODUCTO_DESTINO VARCHAR(10))', [])
+      db.executeSql('CREATE TABLE IF NOT EXISTS MOVIMIENTOS(CODIGO_PRODUCTO VARCHAR(10), TIPO_MOVIMIENTO VARCHAR(20), CANTIDAD INTEGER, FECHA TEXT, PRODUCTO_DESTINO VARCHAR(10), ORIGEN VARCHAR(10))', [])
         .then(() => {
           console.log('Tabla MOVIMIENTOS creada correctamente');
         })
@@ -30,32 +30,37 @@ export class MovimientosService {
     });
   }
 
-  async registrarMovimiento(codigoProducto: string, tipoMovimiento: string, cantidad: number, fecha: string, productoDestino: string = ''): Promise<void> {
+  async registrarMovimiento(codigoProducto: string, tipoMovimiento: string, cantidad: number, fecha: string, productoDestino: string = '', origen: string = ''): Promise<void> {
     if (!this.dbInstance) {
       console.error('Base de datos no inicializada');
       throw new Error('Base de datos no inicializada');
     }
     try {
-      await this.dbInstance.executeSql('INSERT INTO MOVIMIENTOS (CODIGO_PRODUCTO, TIPO_MOVIMIENTO, CANTIDAD, FECHA, PRODUCTO_DESTINO) VALUES (?, ?, ?, ?, ?)', [codigoProducto, tipoMovimiento, cantidad, fecha, productoDestino]);
-
-      let stockUpdateQuery = '';
-      let stockUpdateParams: any[] = [];
-
-      if (tipoMovimiento === 'Ingreso') {
-        stockUpdateQuery = 'UPDATE PRODUCTOS SET STOCK_LBS = COALESCE(STOCK_LBS, 0) + ? WHERE CODIGO = ?';
-        stockUpdateParams = [cantidad, codigoProducto];
-      } else if (tipoMovimiento === 'Salida' || tipoMovimiento === 'Transferencia') {
-        stockUpdateQuery = 'UPDATE PRODUCTOS SET STOCK_LBS = COALESCE(STOCK_LBS, 0) - ? WHERE CODIGO = ?';
-        stockUpdateParams = [cantidad, codigoProducto];
-      }
-
-      await this.dbInstance.executeSql(stockUpdateQuery, stockUpdateParams);
-
       if (tipoMovimiento === 'Transferencia') {
-        // Registrar el movimiento de ingreso para el producto destino
-        await this.dbInstance.executeSql('INSERT INTO MOVIMIENTOS (CODIGO_PRODUCTO, TIPO_MOVIMIENTO, CANTIDAD, FECHA, PRODUCTO_DESTINO) VALUES (?, ?, ?, ?, ?)', [productoDestino, 'Ingreso', cantidad, fecha, '']);
+        // Registrar la salida del producto origen
+        await this.dbInstance.executeSql('INSERT INTO MOVIMIENTOS (CODIGO_PRODUCTO, TIPO_MOVIMIENTO, CANTIDAD, FECHA, PRODUCTO_DESTINO, ORIGEN) VALUES (?, ?, ?, ?, ?, ?)', [codigoProducto, 'Salida', cantidad, fecha, productoDestino, codigoProducto]);
+        // Actualizar el stock del producto origen
+        await this.dbInstance.executeSql('UPDATE PRODUCTOS SET STOCK_LBS = COALESCE(STOCK_LBS, 0) - ? WHERE CODIGO = ?', [cantidad, codigoProducto]);
+
+        // Registrar el ingreso para el producto destino
+        await this.dbInstance.executeSql('INSERT INTO MOVIMIENTOS (CODIGO_PRODUCTO, TIPO_MOVIMIENTO, CANTIDAD, FECHA, PRODUCTO_DESTINO, ORIGEN) VALUES (?, ?, ?, ?, ?, ?)', [productoDestino, 'Ingreso', cantidad, fecha, '', codigoProducto]);
         // Actualizar el stock del producto destino
         await this.dbInstance.executeSql('UPDATE PRODUCTOS SET STOCK_LBS = COALESCE(STOCK_LBS, 0) + ? WHERE CODIGO = ?', [cantidad, productoDestino]);
+      } else {
+        await this.dbInstance.executeSql('INSERT INTO MOVIMIENTOS (CODIGO_PRODUCTO, TIPO_MOVIMIENTO, CANTIDAD, FECHA, PRODUCTO_DESTINO, ORIGEN) VALUES (?, ?, ?, ?, ?, ?)', [codigoProducto, tipoMovimiento, cantidad, fecha, productoDestino, '']);
+
+        let stockUpdateQuery = '';
+        let stockUpdateParams: any[] = [];
+
+        if (tipoMovimiento === 'Ingreso') {
+          stockUpdateQuery = 'UPDATE PRODUCTOS SET STOCK_LBS = COALESCE(STOCK_LBS, 0) + ? WHERE CODIGO = ?';
+          stockUpdateParams = [cantidad, codigoProducto];
+        } else if (tipoMovimiento === 'Salida') {
+          stockUpdateQuery = 'UPDATE PRODUCTOS SET STOCK_LBS = COALESCE(STOCK_LBS, 0) - ? WHERE CODIGO = ?';
+          stockUpdateParams = [cantidad, codigoProducto];
+        }
+
+        await this.dbInstance.executeSql(stockUpdateQuery, stockUpdateParams);
       }
 
       console.log('Movimiento registrado correctamente');
@@ -83,6 +88,28 @@ export class MovimientosService {
         console.log('Error obteniendo movimientos', e);
         reject(e);
       });
+    });
+  }
+
+  obtenerMovimientosPorProducto(codigoProducto: string): Promise<any[]> {
+    return new Promise<any[]>((resolve, reject) => {
+      if (!this.dbInstance) {
+        console.error('Base de datos no inicializada');
+        resolve([]);
+        return;
+      }
+      this.dbInstance.executeSql('SELECT * FROM MOVIMIENTOS WHERE CODIGO_PRODUCTO = ? OR PRODUCTO_DESTINO = ?', [codigoProducto, codigoProducto])
+        .then((data) => {
+          let movimientos = [];
+          for (let i = 0; i < data.rows.length; i++) {
+            movimientos.push(data.rows.item(i));
+          }
+          resolve(movimientos);
+        })
+        .catch(e => {
+          console.log('Error obteniendo movimientos', e);
+          reject(e);
+        });
     });
   }
 }

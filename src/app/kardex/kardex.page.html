@@ -1,17 +1,42 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-menu-button color="primary">
-      </ion-menu-button>
+      <ion-menu-button color="primary"></ion-menu-button>
     </ion-buttons>
-    <ion-title>kardex</ion-title>
+    <ion-title>Kardex</ion-title>
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-icon slot="icon-only" name="document-text" color="primary"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">kardex</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]="true" color="light">
+  <ion-list inset="true">
+    <ion-item >
+      <ion-label position="floating">Código de Producto</ion-label>
+      <ion-input [(ngModel)]="codigoProducto" (ionBlur)="consultarKardex()"></ion-input>
+    </ion-item>
+</ion-list>
+
+  <ion-card *ngIf="saldoActual !== null">
+    <ion-card-header>
+      <ion-card-title>{{ saldoActual }} lbs</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <P>Saldo Actual</P>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-list inset="true">
+    <ion-item *ngFor="let movimiento of movimientos">
+      <ion-label>
+        <h2>{{ movimiento.TIPO_MOVIMIENTO }}</h2>
+        <p>{{ movimiento.CANTIDAD }} lbs</p>
+        <p>{{ movimiento.FECHA }}</p>
+        <p *ngIf="movimiento.PRODUCTO_DESTINO">Destino: {{ movimiento.PRODUCTO_DESTINO }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
 </ion-content>
