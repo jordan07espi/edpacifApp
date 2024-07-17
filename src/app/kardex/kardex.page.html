@@ -28,7 +28,7 @@
     <ion-item *ngFor="let movimiento of movimientos">
       <ion-label>
         <h2>{{ movimiento.TIPO_MOVIMIENTO }}</h2>
-        <p>{{ movimiento.CANTIDAD }} lbs</p>
+
         <p>{{ movimiento.FECHA }}</p>
         <p *ngIf="movimiento.PRODUCTO_DESTINO">Destino: {{ movimiento.PRODUCTO_DESTINO }}</p>
         <p *ngIf="movimiento.PRODUCTO_ORIGEN">Origen: {{ movimiento.PRODUCTO_ORIGEN }}</p>
