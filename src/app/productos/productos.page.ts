@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { AlertController, ToastController } from '@ionic/angular';
+import { AlertController, ToastController, Platform } from '@ionic/angular';
 import { DbService } from '../services/db.service';
 import { Router } from '@angular/router';
+import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 
 @Component({
   selector: 'app-productos',
@@ -15,14 +16,32 @@ export class ProductosPage implements OnInit {
     private dbService: DbService,
     private alertController: AlertController,
     private toastController: ToastController,
-    private router: Router
+    private router: Router,
+    private androidPermissions: AndroidPermissions,
+    private platform: Platform
   ) {}
 
   ngOnInit() {
-    this.loadProductos();
+    this.platform.ready().then(() => {
+      this.requestPermissions().then(() => {
+        this.loadProductos();
+      });
+    });
   }
+
   ionViewWillEnter() {
     this.loadProductos();
+  }
+
+  async requestPermissions() {
+    try {
+      const result = await this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE);
+      if (!result.hasPermission) {
+        await this.androidPermissions.requestPermissions([this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE]);
+      }
+    } catch (error) {
+      console.error('Error solicitando permisos', error);
+    }
   }
 
   loadProductos() {

@@ -8,6 +8,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { DbService } from './services/db.service';
 import { SQLite } from '@ionic-native/sqlite/ngx';
 import { MovimientosService } from './services/movimientos.service';
+import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import { MovimientosService } from './services/movimientos.service';
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     DbService,
     SQLite,
-    MovimientosService
+    MovimientosService,
+    AndroidPermissions
   ],
   bootstrap: [AppComponent]
 })
