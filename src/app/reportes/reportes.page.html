@@ -4,6 +4,11 @@
       <ion-menu-button color="primary"></ion-menu-button>
     </ion-buttons>
     <ion-title>Reportes</ion-title>
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-icon slot="icon-only" name="document-text" color="primary"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -14,6 +19,15 @@
       <ion-select [(ngModel)]="continenteSeleccionado" (ionChange)="cargarReportes()" interface="action-sheet" slot="end">
         <ion-select-option *ngFor="let continente of continentes" [value]="continente">{{ continente }}</ion-select-option>
       </ion-select>
+    </ion-item>
+  </ion-list>
+
+  <ion-list inset="true">
+    <ion-item *ngFor="let producto of productos">
+      <ion-label>
+        <h2>{{ producto.CODIGO }}</h2>
+        <p>Saldo Actual: {{ producto.SALDO_ACTUAL }} lbs</p>
+      </ion-label>
     </ion-item>
   </ion-list>
 
