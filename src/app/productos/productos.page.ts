@@ -21,6 +21,9 @@ export class ProductosPage implements OnInit {
   ngOnInit() {
     this.loadProductos();
   }
+  ionViewWillEnter() {
+    this.loadProductos();
+  }
 
   loadProductos() {
     this.dbService.obtenerProductos().then((data) => {
@@ -30,45 +33,8 @@ export class ProductosPage implements OnInit {
     });
   }
 
-  async mostrarFormulario() {
-    const alert = await this.alertController.create({
-      header: 'Nuevo Producto',
-      inputs: [
-        { name: 'codigo', type: 'text', placeholder: 'Código' },
-        { name: 'descripcion', type: 'text', placeholder: 'Descripción' },
-        { name: 'talla', type: 'text', placeholder: 'Talla' },
-        { name: 'continente', type: 'text', placeholder: 'Continente' },
-        { name: 'pais', type: 'text', placeholder: 'País' },
-        { name: 'precioCompra', type: 'number', placeholder: 'Precio Compra' },
-        { name: 'precioVenta', type: 'number', placeholder: 'Precio Venta' }
-      ],
-      buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel',
-          cssClass: 'secondary',
-          handler: () => {
-            console.log('Confirm Cancel');
-          }
-        },
-        {
-          text: 'Almacenar',
-          handler: (data) => {
-            this.almacenarProducto(data.codigo, data.descripcion, data.talla, data.continente, data.pais, data.precioCompra, data.precioVenta);
-          }
-        }
-      ]
-    });
-    await alert.present();
-  }
-
-  almacenarProducto(codigo: string, descripcion: string, talla: string, continente: string, pais: string, precioCompra: number, precioVenta: number) {
-    this.dbService.almacenarProducto(codigo, descripcion, talla, continente, pais, precioCompra, precioVenta).then(() => {
-      this.loadProductos();
-      this.presentToast('Producto agregado exitosamente');
-    }).catch(() => {
-      this.presentToast('Error al agregar producto');
-    });
+  navegarAgregarProducto() {
+    this.router.navigate(['/agregar-producto']);
   }
 
   async confirmarEliminarProducto(codigo: string) {

@@ -58,9 +58,7 @@ export class DetalleProductoPage implements OnInit {
 			{ name: 'descripcion', type: 'text', placeholder: 'Descripción', value: this.producto.DESCRIPCION },
 			{ name: 'talla', type: 'text', placeholder: 'Talla', value: this.producto.TALLA },
 			{ name: 'continente', type: 'text', placeholder: 'Continente', value: this.producto.CONTINENTE },
-			{ name: 'pais', type: 'text', placeholder: 'País', value: this.producto.PAIS },
-			{ name: 'precioCompra', type: 'number', placeholder: 'Precio Compra', value: this.producto.PRECIO_COMPRA },
-			{ name: 'precioVenta', type: 'number', placeholder: 'Precio Venta', value: this.producto.PRECIO_VENTA }
+			{ name: 'pais', type: 'text', placeholder: 'País', value: this.producto.PAIS }
 		  ],
 		  buttons: [
 			{

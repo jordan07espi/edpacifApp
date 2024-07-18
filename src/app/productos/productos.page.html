@@ -15,7 +15,7 @@
   </ion-header>
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button color="primary" (click)="mostrarFormulario()">
+    <ion-fab-button color="primary" (click)="navegarAgregarProducto()">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>
@@ -28,7 +28,6 @@
         <p>{{ producto.TALLA }}</p>
       </ion-label>
       <p slot="end" color="primary">{{ producto.STOCK_LBS }} lbs</p>
-
     </ion-item>
   </ion-list>
 </ion-content>

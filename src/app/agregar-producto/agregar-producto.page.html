@@ -1,0 +1,51 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/productos"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Agregar Producto</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" color="light">
+  <ion-list inset="true">
+    <ion-item>
+      <ion-label>Código</ion-label>
+      <ion-select [(ngModel)]="producto.codigo" interface="action-sheet" slot="end">
+        <ion-select-option value="PT0001">PT0001</ion-select-option>
+        <ion-select-option value="PT0002">PT0002</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>Descripción</ion-label>
+      <ion-select [(ngModel)]="producto.descripcion" interface="action-sheet" slot="end">
+        <ion-select-option value="HEAD-ON">HEAD-ON</ion-select-option>
+        <ion-select-option value="HEAD-OFF">HEAD-OFF</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>Talla</ion-label>
+      <ion-select [(ngModel)]="producto.talla" interface="action-sheet" slot="end">
+        <ion-select-option value="30-40">30-40</ion-select-option>
+        <ion-select-option value="40-50">40-50</ion-select-option>
+        <ion-select-option value="50-60">50-60</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>Continente</ion-label>
+      <ion-select [(ngModel)]="producto.continente" interface="action-sheet" slot="end">
+        <ion-select-option value="EUROPA">EUROPA</ion-select-option>
+        <ion-select-option value="ASIA">ASIA</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>País</ion-label>
+      <ion-select [(ngModel)]="producto.pais" interface="action-sheet" slot="end">
+        <ion-select-option value="ESPAÑA">ESPAÑA</ion-select-option>
+        <ion-select-option value="CHINA">CHINA</ion-select-option>
+      </ion-select>
+    </ion-item>
+  </ion-list>
+
+  <ion-button expand="block" (click)="almacenarProducto()">Guardar</ion-button>
+</ion-content>

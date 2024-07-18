@@ -12,6 +12,10 @@ const routes: Routes = [
     loadChildren: () => import('./productos/productos.module').then(m => m.ProductosPageModule)
   },
   {
+    path: 'agregar-producto',
+    loadChildren: () => import('./agregar-producto/agregar-producto.module').then( m => m.AgregarProductoPageModule)
+  },
+  {
     path: 'detalle-producto/:codigo',
     loadChildren: () => import('./detalle-producto/detalle-producto.module').then(m => m.DetalleProductoPageModule)
   },
@@ -31,6 +35,7 @@ const routes: Routes = [
     path: 'registrar-movimiento',
     loadChildren: () => import('./registrar-movimiento/registrar-movimiento.module').then( m => m.RegistrarMovimientoPageModule)
   },
+
 
 ];
 
