@@ -91,6 +91,48 @@ export class DbService {
     });
   }
 
+  obtenerProductosPorContinente(continente: string): Promise<any[]> {
+    return new Promise<any[]>((resolve, reject) => {
+      if (!this.dbInstance) {
+        console.error('Base de datos no inicializada');
+        resolve([]);
+        return;
+      }
+      this.dbInstance.executeSql('SELECT * FROM PRODUCTOS WHERE CONTINENTE = ?', [continente]).then((data) => {
+        let productos = [];
+        for (let i = 0; i < data.rows.length; i++) {
+          productos.push(data.rows.item(i));
+        }
+        resolve(productos);
+      })
+      .catch(e => {
+        console.log('Error obteniendo productos', e);
+        reject(e);
+      });
+    });
+  }
+
+  obtenerProductosPorPais(pais: string): Promise<any[]> {
+    return new Promise<any[]>((resolve, reject) => {
+      if (!this.dbInstance) {
+        console.error('Base de datos no inicializada');
+        resolve([]);
+        return;
+      }
+      this.dbInstance.executeSql('SELECT * FROM PRODUCTOS WHERE PAIS = ?', [pais]).then((data) => {
+        let productos = [];
+        for (let i = 0; i < data.rows.length; i++) {
+          productos.push(data.rows.item(i));
+        }
+        resolve(productos);
+      })
+      .catch(e => {
+        console.log('Error obteniendo productos', e);
+        reject(e);
+      });
+    });
+  }
+
   eliminarProducto(codigo: string): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       if (!this.dbInstance) {

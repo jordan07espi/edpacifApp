@@ -108,4 +108,25 @@ export class MovimientosService {
     });
   }
 
+  obtenerMovimientosPorCodigos(codigos: string[]): Promise<any[]> {
+    return new Promise<any[]>((resolve, reject) => {
+      if (!this.dbInstance) {
+        console.error('Base de datos no inicializada');
+        resolve([]);
+        return;
+      }
+      const placeholders = codigos.map(() => '?').join(',');
+      this.dbInstance.executeSql(`SELECT * FROM MOVIMIENTOS WHERE CODIGO_PRODUCTO IN (${placeholders})`, codigos).then((data) => {
+        let movimientos = [];
+        for (let i = 0; i < data.rows.length; i++) {
+          movimientos.push(data.rows.item(i));
+        }
+        resolve(movimientos);
+      })
+      .catch(e => {
+        console.log('Error obteniendo movimientos', e);
+        reject(e);
+      });
+    });
+  }
 }
