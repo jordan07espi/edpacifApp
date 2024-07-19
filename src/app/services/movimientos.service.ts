@@ -93,7 +93,7 @@ export class MovimientosService {
         resolve([]);
         return;
       }
-      this.dbInstance.executeSql('SELECT * FROM MOVIMIENTOS WHERE CODIGO_PRODUCTO = ? OR PRODUCTO_DESTINO = ? ORDER BY FECHA DESC', [codigoProducto, codigoProducto])
+      this.dbInstance.executeSql('SELECT * FROM MOVIMIENTOS WHERE CODIGO_PRODUCTO = ? OR PRODUCTO_DESTINO = ? ORDER BY FECHA ASC', [codigoProducto, codigoProducto])
         .then((data) => {
           let movimientos = [];
           for (let i = 0; i < data.rows.length; i++) {
@@ -107,6 +107,7 @@ export class MovimientosService {
         });
     });
   }
+  
 
   obtenerMovimientosPorCodigos(codigos: string[]): Promise<any[]> {
     return new Promise<any[]>((resolve, reject) => {
