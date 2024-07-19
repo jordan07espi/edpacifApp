@@ -1,17 +1,31 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MovimientosService } from '../services/movimientos.service';
+import { DbService } from '../services/db.service';
 
 @Component({
   selector: 'app-kardex',
   templateUrl: './kardex.page.html',
   styleUrls: ['./kardex.page.scss'],
 })
-export class KardexPage {
+export class KardexPage implements OnInit {
   codigoProducto: string = '';
   movimientos: any[] = [];
   saldoActual: number | null = null;
+  productos: any[] = [];  // Lista de productos para el ion-select
 
-  constructor(private movimientosService: MovimientosService) {}
+  constructor(private movimientosService: MovimientosService, private dbService: DbService) {}
+
+  ngOnInit() {
+    this.loadProductos();
+  }
+
+  loadProductos() {
+    this.dbService.obtenerProductos().then((data) => {
+      this.productos = data;
+    }).catch((e) => {
+      console.error('Error al cargar productos', e);
+    });
+  }
 
   consultarKardex() {
     if (this.codigoProducto.trim() === '') {
